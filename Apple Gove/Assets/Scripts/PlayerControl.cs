@@ -54,6 +54,7 @@ public class PlayerControl : MonoBehaviour
 
         //tell enemies to move
         if (hasMoved) {
+            GameManager.instance.MoveEnemies();
             print("Has moved");
         }
     }

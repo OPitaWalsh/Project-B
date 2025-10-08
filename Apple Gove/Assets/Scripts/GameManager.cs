@@ -52,6 +52,13 @@ public class GameManager : MonoBehaviour
 
 
 
+    //move enemies after player
+    public void MoveEnemies() {
+        //tell each enemy to move
+    }
+
+
+
     //variable display
     public void SyncHUD() {
         //healthbar.fillAmount = currHP / (float)maxHP;
