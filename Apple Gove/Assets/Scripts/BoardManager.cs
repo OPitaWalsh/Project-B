@@ -3,8 +3,9 @@ using UnityEngine.Tilemaps;
 
 /* CREDITS:
 * Most code by Pav, https://pavcreations.com/procedural-generation-of-2d-maps-in-unity/3/
-* with DrawMap() adapted from Unity Learn, https://learn.unity.com/course/2d-roguelike-tutorial/tutorial/add-a-game-board?version=6.0
-* Comments by me to improve and prove my understanding
+* with DrawMap() and CellToWorld() adapted from Unity Learn, https://learn.unity.com/course/2d-roguelike-tutorial/tutorial/add-a-game-board?version=6.0
+* Comments by me to improve and prove my understanding.
+* In retrospect, I should have left these as two separate scripts.
 */
 
 public class BoardManager : MonoBehaviour
@@ -14,10 +15,13 @@ public class BoardManager : MonoBehaviour
         public bool Passable;
     }
 
+    public PlayerControl player;
+
     //2D arrays
     int[,] generatedMap;    // 1s and 0s used for generating map; when complete, passes to below
-    private CellData[,] boardData;    // 1/0s translated to Passable true/false, for ease of player
+    public CellData[,] boardData { get; private set; }    // 1/0s translated to Passable true/false, for ease of player
     private Tilemap tileMap;    // draws 1/0s as tiles
+    private Grid grid;      // parent of tileMap that the Player can see as a phyical location
 
     //CA parameters
     public Tile[] groundTiles;
@@ -45,9 +49,16 @@ public class BoardManager : MonoBehaviour
     
     void Start() {
         tileMap = GetComponentInChildren<Tilemap>();
+        grid = GetComponentInChildren<Grid>();
 
         CellularAutomata();
         DrawMap();
+
+        if (player != null) {
+            player.Spawn(FindFirstPassable());
+        } else {
+            Debug.Log("No player in board!");
+        }
     }
 
 
@@ -312,6 +323,26 @@ public class BoardManager : MonoBehaviour
                 tileMap.SetTile(new Vector3Int(x,y,0), tile);
             }
         }
+    }
+
+
+    // Translates a cell coordinate to a world coordinate
+    // CREDIT: Code adapted from Unity Learn
+    public Vector3 CellToWorld(Vector2Int cellIndex) {
+        return grid.GetCellCenterWorld((Vector3Int)cellIndex);
+    }
+
+
+    // Finds first (bottom-left) tile that is passable
+    // CREDIT: I wrote this!
+    Vector2Int FindFirstPassable() {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (boardData[x,y].Passable) { return new Vector2Int(x,y); }
+            }
+        }
+        Debug.Log("Impassable board!");
+        return new Vector2Int(-1,-1);
     }
 
 

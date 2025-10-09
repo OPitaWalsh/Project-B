@@ -8,9 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
     public int maxHP { get; private set; }
     public int currHP { get; private set; }
-    public int item { get; private set; }
-    public int weapon1 { get; private set; }
-    public int weapon2 { get; private set; }
+    public Food item { get; private set; }
+    public Weapon weapon1 { get; private set; }
+    public Weapon weapon2 { get; private set; }
 
     public float deadzone { get; private set; }
 
@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         maxHP = currHP = 5;
-        item = 0;
-        weapon1 = 1;
-        weapon2 = 0;
+        item = null;
+        weapon1 = null;  ////
+        weapon2 = null;
         SyncHUD();
 
         deadzone = 0.5f;
@@ -83,24 +83,25 @@ public class GameManager : MonoBehaviour
         SyncHUD();
     }
 
-    public void SetItem(int i) {
-        item = i;
+    public void SetItem(Food f) {
+        item = f;
         SyncHUD();
     }
 
-    public void SetWeapon1(int i) {
-        weapon1 = i;
+    public void SetWeapon1(Weapon w) {
+        if (weapon1 != null) { SetWeapon2(weapon1); } //move first item to second place if applicable
+        weapon1 = w;
         SyncHUD();
     }
 
-    public void SetWeapon2(int i) {
-        weapon2 = i;
+    public void SetWeapon2(Weapon w) {
+        weapon2 = w;
         SyncHUD();
     }
 
     public void SwitchWeapon() {
-        int a = weapon1;
-        int b = weapon2;
+        Weapon a = weapon1;
+        Weapon b = weapon2;
         weapon1 = b;
         weapon2 = a;
         SyncHUD();
