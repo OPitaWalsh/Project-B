@@ -136,8 +136,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4029577751672454155}
   - component: {fileID: 5194889386097175561}
+  - component: {fileID: 187898726335857076}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: BoardManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,3 +172,31 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &187898726335857076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3548069229514971959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 819bf19ac2fb80147bbfb8d0e2ca1abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoardManager
+  groundTiles:
+  - {fileID: 11400000, guid: 56e7cab77f65b7f419a47b05421bb1d3, type: 2}
+  - {fileID: 11400000, guid: 3ae09cff082ecab40840d4c05e0aa598, type: 2}
+  wallTiles:
+  - {fileID: 11400000, guid: c1f05971857727f48816d1bc824873f7, type: 2}
+  width: 50
+  height: 50
+  seed: 0
+  fillingPercentage: 48
+  hilbertReps: 0
+  hilbertScale: 1
+  shiftX: 0
+  shiftY: 0
+  pathGirth: 0
+  negativePathGirth: 0
+  isDisplayGuidelines: 0
