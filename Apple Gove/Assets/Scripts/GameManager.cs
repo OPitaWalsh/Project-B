@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     //UI components
     [SerializeField]private Image healthbar;
+    [SerializeField]private GameObject itemBox;
+    [SerializeField]private GameObject weaponBox1;
+    [SerializeField]private GameObject weaponBox2;
     [SerializeField]private GameObject winScreen;
     [SerializeField]private GameObject loseScreen;
     [SerializeField]private GameObject buttonSet;
@@ -43,11 +46,9 @@ public class GameManager : MonoBehaviour
 
         deadzone = 0.5f;
 
-        /*
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
         buttonSet.SetActive(false);
-        */
     }
 
 
@@ -61,8 +62,11 @@ public class GameManager : MonoBehaviour
 
     //variable display
     public void SyncHUD() {
-        //healthbar.fillAmount = currHP / (float)maxHP;
-        //show item
+        healthbar.fillAmount = currHP / (float)maxHP;
+        if (item != null)
+        {
+            itemBox.GetComponentInChildren<Image>().sprite = item.GetComponent<SpriteRenderer>().sprite;
+        }
         //show weapon1
         //show weapon2
     }

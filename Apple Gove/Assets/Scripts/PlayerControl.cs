@@ -58,10 +58,24 @@ public class PlayerControl : MonoBehaviour
         }
 
 
-        //if possible, actually move and tell enemies to move
+        //if possible, actually processes movementmove, colle and tell enemies to move
         if (hasMoved) {
-            if (board.boardData[ newCellTarget.x, newCellTarget.y ].Passable) {
+            BoardManager.CellData newCell = board.boardData[newCellTarget.x, newCellTarget.y];
+            //move
+            if (newCell.Passable) {
                 MoveTo(newCellTarget);
+
+                //collect object or touch enemy
+                GameObject newObj = newCell.ContainedObject;
+                if (newObj != null) {
+                    if (newObj.CompareTag("Food")) { GameManager.instance.SetItem( newObj.GetComponent<Food>() ); }
+                    else if (newObj.CompareTag("Weapon")) { GameManager.instance.SetWeapon1( newObj.GetComponent<Weapon>() ); }
+                    else if (newObj.CompareTag("Enemy")) { TouchEnemy(newObj.GetComponent<Enemy>()); }
+                    else if (newObj.CompareTag("Finish")) { GameManager.instance.WinLevel(); }
+                    
+                }
+
+                //tell enemies to move
                 GameManager.instance.MoveEnemies();
             }
         }
@@ -82,28 +96,14 @@ public class PlayerControl : MonoBehaviour
     }
 
 
-    void OnTriggerEnter2D(Collider2D coll) {
-        print("triggered"); ////
-        if (coll.gameObject.tag == "Food") {
-            GameManager.instance.SetItem(coll.gameObject.GetComponent<Food>());
+    void TouchEnemy(Enemy e) {
+        if (hasMoved && GameManager.instance.weapon1 != null) {     //if player moved, hurt enemy
+            e.HPDown(GameManager.instance.weapon1.damage);
+            MoveTo(prevCellPos);    //player moves back to previous position
         }
-        else if (coll.gameObject.tag == "Weapon") {
-            GameManager.instance.SetWeapon1(coll.gameObject.GetComponent<Weapon>());
-        }
-        else if (coll.gameObject.tag == "Enemy") {
-            Enemy e = coll.GetComponent<Enemy>();
-
-            if (hasMoved && GameManager.instance.weapon1 != null) {     //if player moved, hurt enemy
-                e.HPDown(GameManager.instance.weapon1.damage);
-                MoveTo(prevCellPos);    //player does not move into space
-            }
-            else {      //if enemy moved into player, hurt player
-                GameManager.instance.HPDown(e.damage);
-                e.MoveToPrev();  //enemy does not move into space
-            }
-        }
-        else if (coll.gameObject.tag == "Finish") {
-            ////GameManager.instance.WinLevel();
+        else {      //if enemy moved into player, or if player has no weapon, hurt player
+            GameManager.instance.HPDown(e.damage);
+            e.MoveToPrev();  //enemy does not move into space
         }
     }
 }

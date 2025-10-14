@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 /* CREDITS:
 * Most code by Pav, https://pavcreations.com/procedural-generation-of-2d-maps-in-unity/3/
-* with DrawMap() and CellToWorld() adapted from Unity Learn, https://learn.unity.com/course/2d-roguelike-tutorial/tutorial/add-a-game-board?version=6.0
+* with indicated functions adapted from Unity Learn, https://learn.unity.com/course/2d-roguelike-tutorial/tutorial/add-a-game-board?version=6.0
 * Comments by me to improve and prove my understanding.
 * In retrospect, I should have left these as two separate scripts.
 */
@@ -13,9 +13,15 @@ public class BoardManager : MonoBehaviour
     //each cell is either passable or not; Player class reads this
     public class CellData {
         public bool Passable;
+        public GameObject ContainedObject;
     }
 
     public PlayerControl player;
+    [Header("Prefabs")]
+    public GameObject foodPrefab;
+    public int foodCount;
+    public GameObject[] weaponPrefabs;
+    public int weaponCount;
 
     //2D arrays
     int[,] generatedMap;    // 1s and 0s used for generating map; when complete, passes to below
@@ -24,8 +30,10 @@ public class BoardManager : MonoBehaviour
     private Grid grid;      // parent of tileMap that the Player can see as a phyical location
 
     //CA parameters
+    [Header("Tiles")]
     public Tile[] groundTiles;
     public Tile[] wallTiles;
+    [Header("Board Properties")]
     public int width;
     public int height;
     public string seed;
@@ -53,6 +61,8 @@ public class BoardManager : MonoBehaviour
 
         CellularAutomata();
         DrawMap();
+        GenerateFood();
+        GenerateWeapons();
 
         if (player != null) {
             player.Spawn(FindFirstPassable());
@@ -335,14 +345,55 @@ public class BoardManager : MonoBehaviour
 
     // Finds first (bottom-left) tile that is passable
     // CREDIT: I wrote this!
-    Vector2Int FindFirstPassable() {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (boardData[x,y].Passable) { return new Vector2Int(x,y); }
+    Vector2Int FindFirstPassable()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (boardData[x, y].Passable) { return new Vector2Int(x, y); }
             }
         }
         Debug.Log("Impassable board!");
-        return new Vector2Int(-1,-1);
+        return new Vector2Int(-1, -1);
+    }
+
+
+    // Places food objects on the board
+    // CREDIT: Code adapted from Unity Learn
+    void GenerateFood()
+    {
+        for (int i = 0; i < foodCount; i++)
+        {
+            int randomX = Random.Range(1, width - 1);
+            int randomY = Random.Range(1, height - 1);
+            CellData data = boardData[randomX, randomY];
+            if (data.Passable && data.ContainedObject == null)
+            {
+                GameObject newFood = Instantiate(foodPrefab);
+                newFood.transform.position = CellToWorld(new Vector2Int(randomX, randomY));
+                data.ContainedObject = newFood;
+            }
+        }
+    }
+    
+
+    // Places weapon objects on the board
+    // CREDIT: Code adapted from Unity Learn
+    void GenerateWeapons()
+    {
+        for (int i = 0; i < weaponCount; i++)
+        {
+            int randomX = Random.Range(1, width - 1);
+            int randomY = Random.Range(1, height - 1);
+            CellData data = boardData[randomX, randomY];
+            if (data.Passable && data.ContainedObject == null)
+            {
+                GameObject newWeapon = Instantiate( weaponPrefabs[ Random.Range( 0, weaponPrefabs.Length-1 ) ] );
+                newWeapon.transform.position = CellToWorld(new Vector2Int(randomX, randomY));
+                data.ContainedObject = newWeapon;
+            }
+        }
     }
 
 
