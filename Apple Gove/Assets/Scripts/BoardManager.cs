@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,10 +19,13 @@ public class BoardManager : MonoBehaviour
 
     public PlayerControl player;
     [Header("Prefabs")]
+    public GameObject exitPrefab;
     public GameObject foodPrefab;
     public int foodCount;
     public GameObject[] weaponPrefabs;
     public int weaponCount;
+    public GameObject[] enemyPrefabs;
+    public int enemyCount;
 
     //2D arrays
     int[,] generatedMap;    // 1s and 0s used for generating map; when complete, passes to below
@@ -54,21 +58,36 @@ public class BoardManager : MonoBehaviour
     public bool isDisplayGuidelines;
 
 
-    
-    void Start() {
+
+    void Start()
+    {
         tileMap = GetComponentInChildren<Tilemap>();
         grid = GetComponentInChildren<Grid>();
 
+        GenerateNew();
+    }
+    
+
+
+    public void GenerateNew() {
         CellularAutomata();
         DrawMap();
-        GenerateFood();
-        GenerateWeapons();
 
-        if (player != null) {
+        if (player != null)
+        {
             player.Spawn(FindFirstPassable());
-        } else {
+        }
+        else
+        {
             Debug.Log("No player in board!");
         }
+
+        GenerateExit();
+        GenerateFood();
+        GenerateWeapons();
+        GenerateEnemies();
+
+        GameManager.instance.SetPlayer(player);
     }
 
 
@@ -359,6 +378,25 @@ public class BoardManager : MonoBehaviour
     }
 
 
+    //Generates exit at last (top-right) tile that is passable
+    void GenerateExit()
+    {
+        for (int y = height-1; y > 0; y--)
+        {
+            for (int x = width-1; x > 0; x--)
+            {
+                if (boardData[x, y].Passable) {
+                    GameObject newExit = Instantiate(exitPrefab);
+                    newExit.transform.position = CellToWorld(new Vector2Int(x, y));
+                    boardData[x, y].ContainedObject = newExit;
+                    return;
+                }
+            }
+        }
+        Debug.Log("Impassable board!");
+    }
+
+
     // Places food objects on the board
     // CREDIT: Code adapted from Unity Learn
     void GenerateFood()
@@ -389,9 +427,29 @@ public class BoardManager : MonoBehaviour
             CellData data = boardData[randomX, randomY];
             if (data.Passable && data.ContainedObject == null)
             {
-                GameObject newWeapon = Instantiate( weaponPrefabs[ Random.Range( 0, weaponPrefabs.Length-1 ) ] );
+                GameObject newWeapon = Instantiate( weaponPrefabs[ Random.Range( 0, weaponPrefabs.Length ) ] );
                 newWeapon.transform.position = CellToWorld(new Vector2Int(randomX, randomY));
                 data.ContainedObject = newWeapon;
+            }
+        }
+    }
+    
+
+    // Places enemies on the board
+    // CREDIT: Code adapted from Unity Learn
+    void GenerateEnemies()
+    {
+        for (int i = 0; i < enemyCount; i++)
+        {
+            int randomX = Random.Range(1, width - 1);
+            int randomY = Random.Range(1, height - 1);
+            CellData data = boardData[randomX, randomY];
+            if (data.Passable && data.ContainedObject == null)
+            {
+                //create enemy
+                GameObject newEnemy = Instantiate( enemyPrefabs[ Random.Range( 0, enemyPrefabs.Length ) ] );
+                newEnemy.GetComponent<Enemy>().Spawn(new Vector2Int(randomX, randomY));
+                data.ContainedObject = newEnemy;        //add to boardData
             }
         }
     }

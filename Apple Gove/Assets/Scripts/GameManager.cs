@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,12 +14,17 @@ public class GameManager : MonoBehaviour
     public Weapon weapon2 { get; private set; }
 
     public float deadzone { get; private set; }
+    public PlayerControl player { get; private set; }
+    public List<Enemy> enemies;
 
     //UI components
+    [Header("Stats")]
     [SerializeField]private Image healthbar;
-    [SerializeField]private GameObject itemBox;
-    [SerializeField]private GameObject weaponBox1;
-    [SerializeField]private GameObject weaponBox2;
+    [SerializeField]private GameObject itemBoxImageChild;
+    [SerializeField]private GameObject weaponBox1ImageChild;
+    [SerializeField]private GameObject weaponBox2ImageChild;
+    
+    [Header("Menus")]
     [SerializeField]private GameObject winScreen;
     [SerializeField]private GameObject loseScreen;
     [SerializeField]private GameObject buttonSet;
@@ -32,7 +38,8 @@ public class GameManager : MonoBehaviour
         }
         else {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
+            // this game functionally only has one level, and no use to persist data to menus, so may as well destroy it
         }
     }
 
@@ -40,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         maxHP = currHP = 5;
         item = null;
-        weapon1 = null;  ////
+        weapon1 = null;
         weapon2 = null;
         SyncHUD();
 
@@ -53,9 +60,20 @@ public class GameManager : MonoBehaviour
 
 
 
+    public void SetPlayer(PlayerControl p) {
+        player = p;
+        foreach (Enemy e in enemies) {
+            e.player = p;
+        }
+    }
+
+
+
     //move enemies after player
     public void MoveEnemies() {
-        //tell each enemy to move
+        foreach (Enemy e in enemies) {
+            e.Tick();
+        }
     }
 
 
@@ -63,12 +81,33 @@ public class GameManager : MonoBehaviour
     //variable display
     public void SyncHUD() {
         healthbar.fillAmount = currHP / (float)maxHP;
+        
         if (item != null)
         {
-            itemBox.GetComponentInChildren<Image>().sprite = item.GetComponent<SpriteRenderer>().sprite;
+            itemBoxImageChild.GetComponent<Image>().sprite = item.GetComponent<SpriteRenderer>().sprite;
         }
-        //show weapon1
-        //show weapon2
+        else
+        {
+            itemBoxImageChild.GetComponent<Image>().sprite = null;
+        }
+
+        if (weapon1 != null)
+        {
+            weaponBox1ImageChild.GetComponent<Image>().sprite = weapon1.GetComponent<SpriteRenderer>().sprite;
+        }
+        else
+        {
+            weaponBox1ImageChild.GetComponent<Image>().sprite = null;
+        }
+        
+        if (weapon2 != null)
+        {
+            weaponBox2ImageChild.GetComponent<Image>().sprite = weapon2.GetComponent<SpriteRenderer>().sprite;
+        }
+        else
+        {
+            weaponBox2ImageChild.GetComponent<Image>().sprite = null;
+        }
     }
 
 
@@ -90,6 +129,13 @@ public class GameManager : MonoBehaviour
     public void SetItem(Food f) {
         item = f;
         SyncHUD();
+    }
+
+    public void UseItem() {
+        if (item != null) {
+            HPUp(item.health);
+            SetItem(null);
+        }
     }
 
     public void SetWeapon1(Weapon w) {

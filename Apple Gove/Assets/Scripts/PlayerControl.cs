@@ -47,14 +47,12 @@ public class PlayerControl : MonoBehaviour
         
         //use item
         if (itemAct.WasPressedThisFrame()) {
-            GameManager.instance.SetItem(null);
-            print("Item used");
+            GameManager.instance.UseItem();
         }
 
         //switch weapon
         if (switchAct.WasPressedThisFrame()) {
             GameManager.instance.SwitchWeapon();
-            print("Weapon switched");
         }
 
 
@@ -68,10 +66,22 @@ public class PlayerControl : MonoBehaviour
                 //collect object or touch enemy
                 GameObject newObj = newCell.ContainedObject;
                 if (newObj != null) {
-                    if (newObj.CompareTag("Food")) { GameManager.instance.SetItem( newObj.GetComponent<Food>() ); }
-                    else if (newObj.CompareTag("Weapon")) { GameManager.instance.SetWeapon1( newObj.GetComponent<Weapon>() ); }
-                    else if (newObj.CompareTag("Enemy")) { TouchEnemy(newObj.GetComponent<Enemy>()); }
-                    else if (newObj.CompareTag("Finish")) { GameManager.instance.WinLevel(); }
+                    if (newObj.CompareTag("Food")) {
+                        GameManager.instance.SetItem(newObj.GetComponent<Food>());
+                        newObj.transform.position = new Vector3(0, 0, 0);       //hide item
+                        newCell.ContainedObject = null;     //item cannot be recollected
+                    }
+                    else if (newObj.CompareTag("Weapon")) {
+                        GameManager.instance.SetWeapon1(newObj.GetComponent<Weapon>());
+                        newObj.transform.position = new Vector3(0, 0, 0);       //hide item
+                        newCell.ContainedObject = null;     //item cannot be recollected
+                    }
+                    else if (newObj.CompareTag("Enemy")) {
+                        TouchEnemy(newObj.GetComponent<Enemy>());
+                    }
+                    else if (newObj.CompareTag("Finish")) {
+                        GameManager.instance.WinLevel();
+                    }
                     
                 }
 
@@ -96,8 +106,8 @@ public class PlayerControl : MonoBehaviour
     }
 
 
-    void TouchEnemy(Enemy e) {
-        if (hasMoved && GameManager.instance.weapon1 != null) {     //if player moved, hurt enemy
+    public void TouchEnemy(Enemy e) {
+        if (hasMoved && GameManager.instance.weapon1 != null) {     //if player moved, and has weapon, hurt enemy
             e.HPDown(GameManager.instance.weapon1.damage);
             MoveTo(prevCellPos);    //player moves back to previous position
         }

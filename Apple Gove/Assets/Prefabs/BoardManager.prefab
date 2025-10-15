@@ -264,12 +264,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardManager
   player: {fileID: 0}
+  exitPrefab: {fileID: 4090458808989254351, guid: 98d56eb34f205ea499ee5645412c9034, type: 3}
   foodPrefab: {fileID: 4090458808989254351, guid: 885d7ab5f075d334fa603780cd138f1a, type: 3}
   foodCount: 5
   weaponPrefabs:
   - {fileID: 4090458808989254351, guid: 1913798b665cf6c40844d3b311260b0b, type: 3}
   - {fileID: 4090458808989254351, guid: 11cd5c87e17b9d64987fa40a029dd094, type: 3}
   weaponCount: 2
+  enemyPrefabs:
+  - {fileID: 4090458808989254351, guid: 4460932ce71729f479d7e30c220b4dde, type: 3}
+  - {fileID: 4090458808989254351, guid: f438435d4493c194fb9193b0a9ecf5e6, type: 3}
+  - {fileID: 4090458808989254351, guid: 80c54c82ed318f748a6fa0b2c1df0523, type: 3}
+  enemyCount: 5
   groundTiles:
   - {fileID: 11400000, guid: 56e7cab77f65b7f419a47b05421bb1d3, type: 2}
   - {fileID: 11400000, guid: 3ae09cff082ecab40840d4c05e0aa598, type: 2}

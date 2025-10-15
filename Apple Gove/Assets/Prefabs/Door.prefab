@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1936846037949256288}
   - component: {fileID: 6435903373042598845}
-  - component: {fileID: 3910327482952967056}
   m_Layer: 0
-  m_Name: Spear
-  m_TagString: Weapon
+  m_Name: Door
+  m_TagString: Finish
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,8 +78,8 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: a980dc8ad1d0cff42b5e26171c5febca, type: 3}
+  m_SortingOrder: 4
+  m_Sprite: {fileID: 5213229242370633579, guid: da36157ae0d1fe04791d67a14529cda7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -91,16 +90,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3910327482952967056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4090458808989254351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47180a475e00e9245a224f040a31a57a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  damage: 2

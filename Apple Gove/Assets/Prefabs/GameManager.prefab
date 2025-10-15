@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 3327526626033516758}
   - component: {fileID: 4076781716639675029}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Weapon1Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -259,6 +259,7 @@ Transform:
   m_Children:
   - {fileID: 9050864865916158925}
   - {fileID: 1224769445580167857}
+  - {fileID: 1541044399802651266}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &23249603814645260
@@ -273,10 +274,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c053e07760bd1584ca8fc8a38653f9ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  enemies: []
   healthbar: {fileID: 2451842736530758514}
-  itemBox: {fileID: 1870838149543990204}
-  weaponBox1: {fileID: 3845721665100934780}
-  weaponBox2: {fileID: 8737015203518691553}
+  itemBoxImageChild: {fileID: 8530222366558438406}
+  weaponBox1ImageChild: {fileID: 1587433901768643920}
+  weaponBox2ImageChild: {fileID: 8982613448502558260}
   winScreen: {fileID: 453022134734079360}
   loseScreen: {fileID: 2238246718097884239}
   buttonSet: {fileID: 9057314649640072120}
@@ -725,7 +727,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 23249603814645260}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: QuitToMainMenu
         m_Mode: 1
@@ -1345,7 +1347,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 23249603814645260}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: RestartLevel
         m_Mode: 1
@@ -1357,6 +1359,37 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &7983217377800647178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1541044399802651266}
+  m_Layer: 0
+  m_Name: Monsters
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1541044399802651266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7983217377800647178}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4289321201778765955}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8502944354842730909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1505,7 +1538,7 @@ GameObject:
   - component: {fileID: 1657433117180656305}
   - component: {fileID: 3594083745231393713}
   m_Layer: 5
-  m_Name: Image
+  m_Name: ItemImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1558,7 +1591,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1731,7 +1764,7 @@ GameObject:
   - component: {fileID: 6862051588293670877}
   - component: {fileID: 4732139712719314991}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Weapon2Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1784,7 +1817,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
