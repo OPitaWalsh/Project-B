@@ -13,6 +13,7 @@ public class PlayerControl : MonoBehaviour
     private InputAction moveAct;
     private InputAction itemAct;
     private InputAction switchAct;
+    private InputAction pauseAct;
 
 
     void Start()
@@ -22,6 +23,7 @@ public class PlayerControl : MonoBehaviour
         moveAct = InputSystem.actions.FindAction("Move");
         itemAct = InputSystem.actions.FindAction("UseItem");
         switchAct = InputSystem.actions.FindAction("SwitchWeapon");
+        pauseAct = InputSystem.actions.FindAction("Pause");
     }
 
 
@@ -53,6 +55,11 @@ public class PlayerControl : MonoBehaviour
         //switch weapon
         if (switchAct.WasPressedThisFrame()) {
             GameManager.instance.SwitchWeapon();
+        }
+
+        //pause game
+        if (pauseAct.WasPressedThisFrame()) {
+            GameManager.instance.TogglePause();
         }
 
 

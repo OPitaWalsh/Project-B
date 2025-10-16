@@ -45,8 +45,15 @@ public class Enemy : MonoBehaviour
     public void HPDown(int amount) {
         hp -= amount;
         if (hp < 1) {
+            GetComponentInChildren<EDeathEffects>().PlayThenDestroy();
+            transform.DetachChildren();
+
             GameManager.instance.enemies.Remove(this);
             Destroy(gameObject);
+        }
+        else {
+            
+            GetComponentInChildren<EDeathEffects>().Play();
         }
     }
 

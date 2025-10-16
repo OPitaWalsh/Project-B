@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     //variables
     public static GameManager instance { get; private set; }
+    private bool isPaused = false;
     public int maxHP { get; private set; }
     public int currHP { get; private set; }
     public Food item { get; private set; }
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     
     [Header("Menus")]
     [SerializeField]private GameObject winScreen;
+    [SerializeField]private GameObject pauseScreen;
     [SerializeField]private GameObject loseScreen;
     [SerializeField]private GameObject buttonSet;
 
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
 
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
+        pauseScreen.SetActive(false);
         buttonSet.SetActive(false);
     }
 
@@ -165,9 +168,16 @@ public class GameManager : MonoBehaviour
         buttonSet.SetActive(true);
     }
 
-    public void LoseLevel() {
+    public void LoseLevel()
+    {
         loseScreen.SetActive(true);
         buttonSet.SetActive(true);
+    }
+    
+    public void TogglePause() {
+        isPaused = !isPaused;
+        pauseScreen.SetActive(isPaused);
+        buttonSet.SetActive(isPaused);
     }
 
 

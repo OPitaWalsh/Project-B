@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -40,7 +40,7 @@ public class BoardManager : MonoBehaviour
     [Header("Board Properties")]
     public int width;
     public int height;
-    public string seed;
+    public int seed;
     private System.Random pseudoRandom;
     [Range(0,100)] public int fillingPercentage;
 
@@ -56,6 +56,7 @@ public class BoardManager : MonoBehaviour
     public int negativePathGirth;
 
     public bool isDisplayGuidelines;
+    public bool isDisplay;
 
 
 
@@ -94,9 +95,10 @@ public class BoardManager : MonoBehaviour
     // Generate the cells
     void CellularAutomata() {
         //if no seed, create a seed from the clock
-        seed = (seed.Length <= 0) ? Time.time.ToString() : seed;
+        //seed = (seed.Length <= 0) ? Time.time.ToString() : seed;
+        seed = DateTime.Now.Millisecond;
         //generate a PRNG
-        pseudoRandom = new System.Random(seed.GetHashCode());
+        pseudoRandom = new System.Random(seed);
 
         GenerateGuidelines();
         GenerateMap();
@@ -343,10 +345,10 @@ public class BoardManager : MonoBehaviour
 
                 if (generatedMap[x,y] == 1) {
                     boardData[x,y].Passable = true;
-                    tile = groundTiles[Random.Range(0, groundTiles.Length)];    //random ground tile art
+                    tile = groundTiles[pseudoRandom.Next(0, groundTiles.Length)];    //random ground tile art
                 } else {
                     boardData[x,y].Passable = false;
-                    tile = wallTiles[Random.Range(0, wallTiles.Length)];    //random wall tile art
+                    tile = wallTiles[pseudoRandom.Next(0, wallTiles.Length)];    //random wall tile art
                 }
 
                 tileMap.SetTile(new Vector3Int(x,y,0), tile);
@@ -403,8 +405,8 @@ public class BoardManager : MonoBehaviour
     {
         for (int i = 0; i < foodCount; i++)
         {
-            int randomX = Random.Range(1, width - 1);
-            int randomY = Random.Range(1, height - 1);
+            int randomX = pseudoRandom.Next(1, width - 1);
+            int randomY = pseudoRandom.Next(1, height - 1);
             CellData data = boardData[randomX, randomY];
             if (data.Passable && data.ContainedObject == null)
             {
@@ -422,12 +424,12 @@ public class BoardManager : MonoBehaviour
     {
         for (int i = 0; i < weaponCount; i++)
         {
-            int randomX = Random.Range(1, width - 1);
-            int randomY = Random.Range(1, height - 1);
+            int randomX = pseudoRandom.Next(1, width - 1);
+            int randomY = pseudoRandom.Next(1, height - 1);
             CellData data = boardData[randomX, randomY];
             if (data.Passable && data.ContainedObject == null)
             {
-                GameObject newWeapon = Instantiate( weaponPrefabs[ Random.Range( 0, weaponPrefabs.Length ) ] );
+                GameObject newWeapon = Instantiate( weaponPrefabs[ pseudoRandom.Next( 0, weaponPrefabs.Length ) ] );
                 newWeapon.transform.position = CellToWorld(new Vector2Int(randomX, randomY));
                 data.ContainedObject = newWeapon;
             }
@@ -441,13 +443,13 @@ public class BoardManager : MonoBehaviour
     {
         for (int i = 0; i < enemyCount; i++)
         {
-            int randomX = Random.Range(1, width - 1);
-            int randomY = Random.Range(1, height - 1);
+            int randomX = pseudoRandom.Next(1, width - 1);
+            int randomY = pseudoRandom.Next(1, height - 1);
             CellData data = boardData[randomX, randomY];
             if (data.Passable && data.ContainedObject == null)
             {
                 //create enemy
-                GameObject newEnemy = Instantiate( enemyPrefabs[ Random.Range( 0, enemyPrefabs.Length ) ] );
+                GameObject newEnemy = Instantiate( enemyPrefabs[ pseudoRandom.Next( 0, enemyPrefabs.Length ) ] );
                 newEnemy.GetComponent<Enemy>().Spawn(new Vector2Int(randomX, randomY));
                 data.ContainedObject = newEnemy;        //add to boardData
             }
@@ -460,7 +462,7 @@ public class BoardManager : MonoBehaviour
     void OnDrawGizmos() {
         CellularAutomata();
         
-        if (generatedMap != null) {
+        if (generatedMap != null && isDisplay) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     Gizmos.color = (generatedMap[x, y] == 1) ? Color.white : Color.black;
